@@ -1,0 +1,56 @@
+/* Base */
+
+.star,
+.stop {
+  font-size: 1.2em;
+  cursor: pointer;
+  border: none;
+  padding: 0 .3em;
+  margin: 0;
+  background: none;
+  transition: ease 0.15s;
+  color: #ccc;
+}
+
+.star:focus,
+.stop:focus {
+  outline: none;
+}
+
+.star:disabled,
+.stop:disabled {
+  cursor: default;
+}
+
+/* Stop */
+
+.stop {
+  font-size: 1.1em;
+  padding-left: 0;
+  color: #ccc;
+}
+
+.stop:hover {
+  color: #f32000;
+  transform: scale(1.2);
+}
+
+.stop.selected:hover {
+  color: #ccc;
+  transform: none;
+  cursor: default;
+}
+
+/* Star */
+
+.star.selected,
+.container:hover .star {
+  color: #f39a00;
+  transform: scale(1.2);
+}
+
+.stop:hover ~ .star,
+.star:hover ~ .star {
+  color: #ccc;
+  transform: none;
+}

@@ -1,0 +1,11 @@
+.team {
+  display: flex;
+  flex-flow: row wrap;
+  font-weight: 700;
+  margin: 0.65rem 0;
+}
+
+.team-title {
+  flex: 0 1 16rem;
+  margin-bottom: 0.35rem;
+}

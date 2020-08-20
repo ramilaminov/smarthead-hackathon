@@ -1,0 +1,126 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
+    Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  line-height: 1.6;
+  font-size: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+li,
+p {
+  line-height: 1.5rem;
+}
+
+a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+hr {
+  border: 1px solid #ddd;
+}
+
+h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.05rem;
+  margin: 1rem 0;
+}
+
+h2 {
+  font-size: 2rem;
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: -0.05rem;
+  margin: 1rem 0;
+}
+
+h3 {
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin: 1rem 0;
+}
+
+h4 {
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+footer {
+  padding-top: 1.5rem;
+}
+
+.button {
+  display: inline-block;
+  padding: .6rem 1.4rem;
+  margin: 0;
+  font-family: inherit;
+  line-height: inherit;
+  text-decoration: none;
+  font-weight: 500;
+  border: none;
+  border-radius: .3rem;
+  cursor: pointer;
+  font-size: 1rem;
+  background-color: #0070f3;
+  color: #fff;
+  box-shadow: 0 4px 14px 0 rgba(0, 118, 255, 0.39);
+  transition: 0.2s ease;
+}
+
+.button:hover {
+  text-decoration: none;
+  background-color: #2687f7;
+}
+
+.button:disabled {
+  cursor: default;
+  background-color: #999;
+  box-shadow: none;
+}
+
+.text-button {
+  color: #0070f3;
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  font-size: 1rem;
+  font-family: inherit;
+  line-height: inherit;
+  text-decoration: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.text-button:hover {
+  text-decoration: underline;
+}
+
+.text-button:disabled {
+  cursor: default;
+  color: #999;
+}
+
+.destructive:hover {
+  color: #f32000;
+}
+
+.light {
+  color: #999;
+}
+
+.top-padding {
+  padding-top: 0.5em;
+}

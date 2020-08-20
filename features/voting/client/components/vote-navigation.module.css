@@ -1,0 +1,7 @@
+.navigation {
+  margin-top: 2rem;
+  display: flex;
+  flex-flow: row-reverse wrap;
+  align-items: center;
+  justify-content: space-between;
+}

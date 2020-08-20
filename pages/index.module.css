@@ -1,0 +1,12 @@
+.avatar {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  top: -0.12em;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+  background-color: white;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
