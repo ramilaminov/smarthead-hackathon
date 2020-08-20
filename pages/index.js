@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Layout from '../core/client/components/layout'
 import SignInButton from '../core/client/components/sign-in-button'
-import { signOut, useSession, getSession } from 'next-auth/client'
+import { signOut, useSession } from 'next-auth/client'
 import Role from '../core/common/role'
 import styles from './index.module.css'
 import { useVoteStatus, useParticipated } from '../features/voting/client/api'
@@ -131,24 +131,17 @@ const UnauthorizedContent = () => {
 }
 
 export default function Page() {
-  const [ session, loading ] = useSession()
+  const [session, loading] = useSession()
   
+  const content = session
+    ? <AuthorizedContent session={session} />
+    : <UnauthorizedContent />
+
   return (
     <Layout>
       <h1>Хакатон 2020</h1>
       
-      {session
-        ? <AuthorizedContent session={session} />
-        : <UnauthorizedContent />
-      }
+      {loading ? <Loader /> : content}
     </Layout>
   )
-}
-
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      session: await getSession(context)
-    }
-  }
 }
