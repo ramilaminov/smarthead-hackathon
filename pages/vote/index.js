@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import Layout from '../../core/client/components/layout'
 import HomeLink from '../../core/client/components/home-link'
 import VoteContent from '../../features/voting/client/components/vote-content'
