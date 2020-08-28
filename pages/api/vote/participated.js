@@ -8,7 +8,6 @@ export default methods({
     const { id: userId } = await getSession({ req })
     const status = await getParticipated(userId)
 
-    const body = JSON.stringify({ value: status })
-    res.status(200).end(body)
+    res.status(200).json({ value: status })
   })
 })

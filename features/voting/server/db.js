@@ -1,4 +1,5 @@
 import db from '../../../core/server/db'
+import { deleteCollection } from '../../../core/server/db-helpers'
 
 const statusRef = () => db.doc('votingState/status')
 const userVoteRef = (userId) => db.doc(`votes/${userId}`)
@@ -17,6 +18,17 @@ export const setStatus = async (status) => {
 export const setVoting = async (userId, result) => {
   await userVoteRef(userId).set({
     data: result
+  })
+}
+
+export const clearVoting = async () => {
+  await deleteCollection(db, 'votes')
+  await db.doc('votingState/results').delete()
+}
+
+export const setResults = async (results) => {
+  await db.doc('votingState/results').set({
+    data: results
   })
 }
 

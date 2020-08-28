@@ -11,6 +11,8 @@ export default methods({
     
     const { id: userId } = await getSession({ req })
 
+    // TODO Обернуть в транзакцию
+
     const voteStatus = await getStatus()
     if (voteStatus !== VoteStatus.OPEN) {
       res.status(400).end()
@@ -23,7 +25,7 @@ export default methods({
       return
     }
     
-    // TODO Проверки:
+    // TODO Добавить проверки:
     // - нет голосов за свою команду (кроме организаторов)
     // - есть голоса по каждому критерию
     // - суммы голосов по каждому критерию сходятся: нет лишних и все потрачены

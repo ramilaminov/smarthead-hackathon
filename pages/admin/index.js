@@ -1,7 +1,7 @@
 import Layout from '../../core/client/components/layout'
 import HomeLink from '../../core/client/components/home-link'
 import Role from '../../core/common/role'
-import { useVoteStatus, changeVoteStatus } from '../../features/voting/client/api'
+import { useVoteStatus, openVoting, closeVoting, publishResults, resetVoting } from '../../features/voting/client/api'
 import VoteStatus from '../../features/voting/common/vote-status'
 import authorized from '../../core/client/authorized'
 import { Loader } from '../../core/client/components/icons'
@@ -16,23 +16,20 @@ const Content = authorized(Role.ADMIN, () => {
   const { status } = useVoteStatus()
 
   const onOpenClick = withConfirm(
-    () => changeVoteStatus(VoteStatus.OPEN),
+    () => openVoting(),
     'Начинаем голосование?'
   )
   const onCloseClick = withConfirm(
-    () => changeVoteStatus(VoteStatus.CLOSED),
+    () => closeVoting(),
     'Завершаем голосование?'
   )
   const onResultClick = withConfirm(
-    () => changeVoteStatus(VoteStatus.RESULT),
+    () => publishResults(),
     'Публикуем результаты голосования для всех?'
   )
 
-  // TODO очищать данные голосования
-  // (отдельный метод, который будет
-  // и статус менять, и очищать?)
   const onResetClick = withConfirm(
-    () => changeVoteStatus(VoteStatus.NONE),
+    () => resetVoting(),
     'Сбрасываем все результаты голосования?'
   )
 
