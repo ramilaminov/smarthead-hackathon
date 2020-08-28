@@ -4,23 +4,21 @@ import SignInButton from '../core/client/components/sign-in-button'
 import { signOut, useSession } from 'next-auth/client'
 import Role from '../core/common/role'
 import styles from './index.module.css'
-import { useVoteStatus, useParticipated } from '../features/voting/client/api'
+import { useVotingState } from '../features/voting/client/api'
 import VoteStatus from '../features/voting/common/vote-status'
 import { useMyTeam } from '../features/team/client/api'
 import { Loader } from '../core/client/components/icons'
 
-const GuestContent = () => {
-  return (
-    <p>
-      Мы не нашли тебя среди участников хакатона.<br />
-      Если здесь что-то не так, обратись к организаторам.
-    </p>
-  )
-}
+const GuestContent = () => (
+  <p>
+    Мы не нашли тебя среди участников хакатона.<br />
+    Если здесь что-то не так, обратись к организаторам.
+  </p>
+)
 
 const MemberContent = () => {
   const { team } = useMyTeam()
-  
+
   return (
     <>
       {team && <p>
@@ -33,65 +31,88 @@ const MemberContent = () => {
   )
 }
 
-const AdminContent = () => {
-  return (
+const AdminContent = () => (
+  <p>
+    А ещё у тебя есть доступ в&nbsp;<Link href="/admin"><a>админку</a></Link>.
+  </p>
+)
+
+const VoteLink = () => (
+  <div className={`top-padding`}>
+    <Link href="/vote"><a className={`button`}>Голосовать!</a></Link>
+  </div>
+)
+
+const ParticipatedText = () => (
+  <p>
+    Спасибо за голосование! Результаты будут здесь позже.
+  </p>
+)
+
+const ClosedText = () => (
+  <p>
+    Голосование завершено. Скоро здесь будут результаты.
+  </p>
+)
+
+const Results = ({ results }) => (
+  // TODO округлять баллы
+  // TODO сортировать
+  <>
     <p>
-      А ещё у тебя есть доступ в&nbsp;<Link href="/admin"><a>админку</a></Link>.
+      А вот и результаты.
     </p>
-  )
-}
+    <ul>
+      {results.map(row => (
+        <li key={row.team.id}>
+          {row.team.name}: {row.score}
+        </li>
+      ))}
+    </ul>
+  </>
+)
 
 const VotingContent = () => {
-  const { status } = useVoteStatus()
-  const { participated } = useParticipated()
+  const { state } = useVotingState()
 
-  if (!status || !participated) {
+  if (!state) {
     return <Loader />
   }
 
-  if (status !== VoteStatus.OPEN) {
-    return null
+  const { status, participated, results } = state
+
+  switch (status) {
+    case VoteStatus.OPEN:
+      return participated ? <ParticipatedText /> : <VoteLink />
+    case VoteStatus.CLOSED:
+      return <ClosedText />
+    case VoteStatus.RESULT:
+      return <Results results={results} />
+    default:
+      return null
   }
-
-  if (participated.value) {
-    return (
-      <p>
-        Спасибо за голосование! Результаты будут здесь позже.
-      </p>
-    )
-  }
-
-  return (
-    <div className={`top-padding`}>
-      <Link href="/vote"><a className={`button`}>Голосовать!</a></Link>
-    </div>
-  )
 }
 
-const Greeting = ({ user }) => {
-  return (
-    <p>
-      Привет, <img src={user.image} className={styles.avatar} title={user.email}/> <strong>{user.name}</strong>!
-    </p>
-  )
-}
+const Greeting = ({ user }) => (
+  <p>
+    Привет, <img src={user.image} className={styles.avatar} title={user.email}/> <strong>{user.name}</strong>!
+  </p>
+)
 
-const Footer = () => {
-  return (
-    <footer>
-      <a
-        href={`/api/auth/signout`}
-        className={`light destructive`}
-        onClick={(e) => {
-          e.preventDefault()
-          signOut()
-        }}
-      >
-        <small>Выйти</small>
-      </a>
-    </footer>
-  )
-}
+const Footer = () => (
+  <footer>
+    <a
+      href={`/api/auth/signout`}
+      className={`light destructive`}
+      onClick={(e) => {
+        e.preventDefault()
+        signOut()
+      }}
+    >
+      <small>Выйти</small>
+    </a>
+  </footer>
+)
 
 const AuthorizedContent = ({ session }) => {
   const { user, role } = session
@@ -116,18 +137,16 @@ const AuthorizedContent = ({ session }) => {
   )
 }
 
-const UnauthorizedContent = () => {
-  return (
-    <>
-      <p>
-        29–30 августа. Онлайн или в&nbsp;офисе.
-      </p>
-      <div className={`top-padding`}>
-        <SignInButton />
-      </div>
-    </>
-  )
-}
+const UnauthorizedContent = () => (
+  <>
+    <p>
+      29–30 августа. Онлайн или в&nbsp;офисе.
+    </p>
+    <div className={`top-padding`}>
+      <SignInButton />
+    </div>
+  </>
+)
 
 export default function Page() {
   const [session, loading] = useSession()

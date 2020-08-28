@@ -39,7 +39,7 @@ export const calculateResults = (teams, users, votes, criteria) => {
     )
 
     for (let i = 0; i < criteria.length; i++) {
-      const criterionResult = userVotes.data[i]
+      const criterionResult = userVotes.value[i]
       const criterionWeight = criteria[i].weight
       
       for (const [teamId, value] of Object.entries(criterionResult)) {

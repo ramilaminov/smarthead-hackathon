@@ -1,7 +1,7 @@
 import Layout from '../../core/client/components/layout'
 import HomeLink from '../../core/client/components/home-link'
 import Role from '../../core/common/role'
-import { useVoteStatus, openVoting, closeVoting, publishResults, resetVoting } from '../../features/voting/client/api'
+import { openVoting, closeVoting, publishResults, resetVoting, useVotingState } from '../../features/voting/client/api'
 import VoteStatus from '../../features/voting/common/vote-status'
 import authorized from '../../core/client/authorized'
 import { Loader } from '../../core/client/components/icons'
@@ -12,8 +12,22 @@ const withConfirm = (action, text) => () => {
   }
 }
 
+const Results = ({ results }) => (
+  // TODO округлять баллы
+  // TODO сортировать
+  <>
+    <ul>
+      {results.map(row => (
+        <li key={row.team.id}>
+          {row.team.name}: {row.score}
+        </li>
+      ))}
+    </ul>
+  </>
+)
+
 const Content = authorized(Role.ADMIN, () => {
-  const { status } = useVoteStatus()
+  const { state } = useVotingState()
 
   const onOpenClick = withConfirm(
     () => openVoting(),
@@ -33,9 +47,11 @@ const Content = authorized(Role.ADMIN, () => {
     'Сбрасываем все результаты голосования?'
   )
 
-  if (!status) {
+  if (!state) {
     return <Loader />
   }
+
+  const { status, results } = state
 
   return (
     <>
@@ -65,8 +81,9 @@ const Content = authorized(Role.ADMIN, () => {
 
       {status === VoteStatus.CLOSED && <>
         <p>
-          Голосование завершено.
+          Голосование завершено. Вот что получилось:
         </p>
+        <Results results={results} />
         <button
           className={`button`}
           onClick={onResultClick}
@@ -77,8 +94,9 @@ const Content = authorized(Role.ADMIN, () => {
 
       {status === VoteStatus.RESULT && <>
         <p>
-          Результаты голосования опубликованы.
+          Результаты опубликованы.
         </p>
+        <Results results={results} />
         <button
           className={`button`}
           onClick={onResetClick}

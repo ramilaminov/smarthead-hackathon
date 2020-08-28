@@ -2,7 +2,7 @@ import { useState } from 'react'
 import VoteStep from './vote-step'
 import criteria from '../../common/criteria'
 import VoteNavigation from './vote-navigation'
-import { sendVote, useVoteTeams } from '../api'
+import { sendVote, useVotingTeams } from '../api'
 import useInProgress from '../../../../core/client/use-in-progress'
 import { Loader } from '../../../../core/client/components/icons'
 
@@ -26,7 +26,7 @@ export default function VoteContent() {
   const [results, setResults] = useState(criteria.map(() => ({})))
   const [sendInProgress, startSending] = useInProgress()
   
-  const { teams } = useVoteTeams()
+  const { teams } = useVotingTeams()
 
   if (!teams) {
     return <Loader />
