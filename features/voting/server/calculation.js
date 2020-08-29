@@ -1,14 +1,8 @@
-const calculateNumUsersWithoutTeams = (users) => {
-  let result = 0
-  for (const user of users.values()) {
-    if (!user.team) result++
-  }
-  return result
-}
-
 export const calculateResults = (teams, users, votes, criteria) => {
-  // Number of members by team
+  // Calculate number of members in teams
   const numMembers = new Map(Array.from(teams.keys(), key => [key, 0]))
+  let numUsersWithoutTeam = 0
+
   for (const userId of votes.keys()) {
     const user = users.get(userId)
     if (!user) {
@@ -18,16 +12,15 @@ export const calculateResults = (teams, users, votes, criteria) => {
     if (user.team) {
       const teamId = user.team.id
       numMembers.set(teamId, numMembers.get(teamId) + 1)
+    } else {
+      numUsersWithoutTeam++
     }
   }
-
-  // Number of users without team
-  const numUsersWithoutTeam = calculateNumUsersWithoutTeams(users)
 
   // Sum by team
   const sum = new Map(Array.from(teams.keys(), key => [key, 0]))
 
-  // Calculate
+  // Calculate results
   for (const [userId, userVotes] of votes) {
     const user = users.get(userId)
     if (!user) {
