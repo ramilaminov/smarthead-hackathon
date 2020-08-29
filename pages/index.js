@@ -8,6 +8,7 @@ import { useVotingState } from '../features/voting/client/api'
 import VoteStatus from '../features/voting/common/vote-status'
 import { useMyTeam } from '../features/team/client/api'
 import { Loader } from '../core/client/components/icons'
+import VotingResults from '../features/voting/client/components/voting-results'
 
 const GuestContent = () => (
   <p>
@@ -25,22 +26,27 @@ const MemberContent = () => {
         Ты в командe <strong>{team.name}</strong>.
       </p>}
       <p>
-        Узнай больше о&nbsp;<Link href="/teams"><a>командах</a></Link> и&nbsp;<Link href="/rules"><a>правилах&nbsp;голосования</a></Link>.
+        Изучи <Link href="/teams"><a>все проекты</a></Link> и&nbsp;<Link href="/rules"><a>правила&nbsp;голосования</a></Link>.
       </p>
     </>
   )
 }
 
-const AdminContent = () => (
+const NotOpenedText = () => (
   <p>
-    А ещё у тебя есть доступ в&nbsp;<Link href="/admin"><a>админку</a></Link>.
+    Приходи сюда голосовать после презентации проектов.
   </p>
 )
 
 const VoteLink = () => (
-  <div className={`top-padding`}>
-    <Link href="/vote"><a className={`button`}>Голосовать!</a></Link>
-  </div>
+  <>
+    <p>
+      Настало время выбрать победителя.
+    </p>
+    <div className={`button-container`}>
+      <Link href="/vote"><a className={`button`}>Голосовать!</a></Link>
+    </div>
+  </>
 )
 
 const ParticipatedText = () => (
@@ -55,23 +61,6 @@ const ClosedText = () => (
   </p>
 )
 
-const Results = ({ results }) => (
-  // TODO округлять баллы
-  // TODO сортировать
-  <>
-    <p>
-      А вот и результаты.
-    </p>
-    <ul>
-      {results.map(row => (
-        <li key={row.team.id}>
-          {row.team.name}: {row.score}
-        </li>
-      ))}
-    </ul>
-  </>
-)
-
 const VotingContent = () => {
   const { state } = useVotingState()
 
@@ -82,14 +71,16 @@ const VotingContent = () => {
   const { status, participated, results } = state
 
   switch (status) {
+    case VoteStatus.NONE:
+      return <NotOpenedText />
     case VoteStatus.OPEN:
       return participated ? <ParticipatedText /> : <VoteLink />
     case VoteStatus.CLOSED:
       return <ClosedText />
     case VoteStatus.PUBLISHED:
-      return <Results results={results} />
+      return <VotingResults results={results} />
     default:
-      return null
+      throw new Error('Invalid status')
   }
 }
 
@@ -99,18 +90,24 @@ const Greeting = ({ user }) => (
   </p>
 )
 
-const Footer = () => (
+const Footer = ({ isAdmin }) => (
   <footer>
-    <a
-      href={`/api/auth/signout`}
-      className={`light destructive`}
-      onClick={(e) => {
-        e.preventDefault()
-        signOut()
-      }}
-    >
-      <small>Выйти</small>
-    </a>
+    <small>
+      <a
+        href={`/api/auth/signout`}
+        className={`light destructive`}
+        onClick={(e) => {
+          e.preventDefault()
+          signOut()
+        }}
+      >
+        Выйти
+      </a>
+      {isAdmin && <>
+        <span className={`light`}>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+        <Link href="/admin"><a className={`light`}>Админка</a></Link>
+      </>}
+    </small>
   </footer>
 )
 
@@ -125,14 +122,11 @@ const AuthorizedContent = ({ session }) => {
 
       {role >= Role.MEMBER &&
         <MemberContent />}
-      
-      {role >= Role.ADMIN &&
-        <AdminContent />}
 
       {role >= Role.MEMBER &&
         <VotingContent />}
 
-      <Footer />
+      <Footer isAdmin={role >= Role.ADMIN} />
     </>
   )
 }
@@ -142,7 +136,7 @@ const UnauthorizedContent = () => (
     <p>
       29–30 августа. Онлайн или в&nbsp;офисе.
     </p>
-    <div className={`top-padding`}>
+    <div className={`button-container`}>
       <SignInButton />
     </div>
   </>

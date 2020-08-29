@@ -48,5 +48,5 @@ export const calculateResults = (teams, users, votes, criteria) => {
   return Array.from(sum.entries(), ([id, score]) => ({
     team: { id: id, ...teams.get(id) },
     score
-  }))
+  })).sort((a, b) => a.score < b.score)
 }

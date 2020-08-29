@@ -36,7 +36,7 @@ export default (roleRequired, WrappedComponent) => (props) => {
       </p>
 
       {!session &&
-        <div className={`top-padding`}>
+        <div className={`button-container`}>
           <SignInButton />
         </div>
       }

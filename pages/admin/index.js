@@ -5,6 +5,8 @@ import { openVoting, closeVoting, publishResults, resetVoting, useVotingState } 
 import VoteStatus from '../../features/voting/common/vote-status'
 import authorized from '../../core/client/authorized'
 import { Loader } from '../../core/client/components/icons'
+import formatScore from '../../features/voting/common/format-score'
+import styles from './index.module.css'
 
 const withConfirm = (action, text) => () => {
   if (confirm(text || 'Вы уверены?')) {
@@ -13,13 +15,11 @@ const withConfirm = (action, text) => () => {
 }
 
 const Results = ({ results }) => (
-  // TODO округлять баллы
-  // TODO сортировать
   <>
-    <ul>
+    <ul className={styles.list}>
       {results.map(row => (
         <li key={row.team.id}>
-          {row.team.name}: {row.score}
+          {row.team.name}: <strong>{formatScore(row.score)}</strong>
         </li>
       ))}
     </ul>
