@@ -26,7 +26,7 @@ const options = {
       const dbUser = await getUserByEmail(user.email)
       if (dbUser) {
         session.role = dbUser.role
-        session.id = dbUser.id
+        session.userId = dbUser.id
       } else {
         session.role = Role.GUEST
       }

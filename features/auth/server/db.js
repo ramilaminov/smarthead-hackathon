@@ -1,5 +1,10 @@
 import db from '../../../core/server/db'
 
+export const getUser = async (id) => {
+  const doc = await db.doc(`users/${id}`).get()
+  return doc.data()
+}
+
 export const getUserByEmail = async (email) => {
   const result = await db.collection("users")
     .where("email", "==", email)

@@ -16,8 +16,6 @@ export default methods({
     const users = await getCollection(db, 'users')
     const votes = await getCollection(db, 'votes')
 
-    // TODO validate data
-
     const results = calculateResults(teams, users, votes, criteria)
 
     console.log('Results: ', results)

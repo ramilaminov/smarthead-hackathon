@@ -1,16 +1,12 @@
 import { getSession } from 'next-auth/client'
 import Role from '../../../core/common/role'
 import { authorize, methods } from '../../../core/server/api'
-import { getUserByEmail } from '../../../features/auth/server/db'
+import { getUser } from '../../../features/auth/server/db'
 
 export default methods({
   GET: authorize(Role.MEMBER, async (req, res) => {
-    const session = await getSession({ req })
-    const user = await getUserByEmail(session.user.email)
-
-    // TODO перенести логику в db
-    // TODO избавиться от getUserByEmail
-    // (в сессии есть id, можно брать doc напрямую)
+    const { userId } = await getSession({ req })
+    const user = await getUser(userId)
 
     let data = null
     if (user.team) {

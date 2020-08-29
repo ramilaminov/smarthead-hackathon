@@ -5,7 +5,7 @@ import { getAnotherTeams } from '../../../features/voting/server/db'
 
 export default methods({
   GET: authorize(Role.MEMBER, async (req, res) => {
-    const { id: userId } = await getSession({ req })
+    const { userId } = await getSession({ req })
     const data = await getAnotherTeams(userId)
     
     res.status(200).json(data)

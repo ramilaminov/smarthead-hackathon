@@ -32,10 +32,10 @@ export const calculateResults = (teams, users, votes, criteria) => {
     )
 
     for (let i = 0; i < criteria.length; i++) {
-      const criterionResult = userVotes.value[i]
+      const criterionVotes = userVotes.value[i]
       const criterionWeight = criteria[i].weight
       
-      for (const [teamId, value] of Object.entries(criterionResult)) {
+      for (const [teamId, value] of Object.entries(criterionVotes)) {
         if (user.team && teamId === user.team.id) {
           throw new Error(`User ${user.email} voted for his team "${teamId}"`)
         }

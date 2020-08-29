@@ -6,7 +6,7 @@ import VoteStatus from '../../../features/voting/common/vote-status'
 
 export default methods({
   GET: authorize(Role.MEMBER, async (req, res) => {
-    const { id: userId, role } = await getSession({ req })
+    const { userId, role } = await getSession({ req })
     
     const status = await getStatus()
     const participated = await getParticipated(userId)
