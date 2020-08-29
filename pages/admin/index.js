@@ -10,7 +10,9 @@ import styles from './index.module.css'
 
 const withConfirm = (action, text) => () => {
   if (confirm(text || 'Вы уверены?')) {
-    action()
+    action().catch(_ => (
+      alert('Что-то пошло не так :(')
+    ))
   }
 }
 

@@ -62,7 +62,9 @@ export default function VoteContent() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   
-  const onSend = () => startSending(sendVote(results))
+  const onSend = () => startSending(sendVote(results).catch(_ => (
+    alert('Что-то пошло не так, попробуй ещё раз :(')
+  )))
 
   return (
     <>

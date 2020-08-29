@@ -1,4 +1,4 @@
-import { useData, sendAction, changeData } from '../../../core/client/swr'
+import { useData, sendAction } from '../../../core/client/swr'
 import { mutate } from 'swr'
 import VoteStatus from '../common/vote-status'
 
