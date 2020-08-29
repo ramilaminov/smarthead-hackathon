@@ -6,11 +6,11 @@ import { useTeams } from '../../features/team/client/api'
 import { Loader } from '../../core/client/components/icons'
 import styles from './index.module.css'
 
-const formatMembers = (members) => {
+const formatMembers = (members, groupName) => {
   if (members.length === 0) {
-    return 'В команде никого.'
+    return `В команде ${groupName} никого.`
   }
-  let result = 'В команде '
+  let result = `В команде ${groupName} `
   result += members[0]
   for (let i = 1; i < members.length; i++) {
     if (i < members.length - 1) {
@@ -31,7 +31,7 @@ const TeamContent = ({ team }) => {
       {team.summary && <p dangerouslySetInnerHTML={{ __html: team.summary }} />}
       
       <p className={styles.members}>
-        {formatMembers(team.members)}
+        {formatMembers(team.members, team.groupName)}
       </p>
     </div>
   )
