@@ -57,6 +57,11 @@ export default function VoteContent() {
       : resultsAreValid(results, votesTotal)
   )
   
+  const onStepChange = (index) => {
+    setStep(index)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  
   const onSend = () => startSending(sendVote(results))
 
   return (
@@ -72,7 +77,7 @@ export default function VoteContent() {
         step={step}
         stepCount={criteria.length}
         nextIsEnabled={nextIsEnabled}
-        onStepChange={setStep}
+        onStepChange={onStepChange}
         onSend={onSend}
       />
     </>
