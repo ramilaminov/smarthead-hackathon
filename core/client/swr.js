@@ -2,14 +2,14 @@ import useSWR, { mutate } from 'swr'
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
-export const useData = (path, name) => {
-  const { data, error } = useSWR(path, fetcher, {
+export const useData = (path, name = 'data') => {
+  const { data, isValidating, error } = useSWR(path, fetcher, {
     refreshInterval: 10000
   })
   return {
-    [name || 'data']: data,
-    isLoading: !error && !data,
-    isError: error
+    [name]: data,
+    isLoading: isValidating,
+    isError: !!error
   }
 }
 

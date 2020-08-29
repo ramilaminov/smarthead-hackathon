@@ -57,10 +57,6 @@ h4 {
   line-height: 1.5;
 }
 
-footer {
-  padding-top: 1.5rem;
-}
-
 .button {
   display: inline-block;
   padding: .6rem 1.4rem;
@@ -121,6 +117,7 @@ footer {
   color: #999;
 }
 
-.top-padding {
+.button-container {
   padding-top: 0.5em;
+  padding-bottom: 1.5em;
 }

@@ -4,81 +4,95 @@ import SignInButton from '../core/client/components/sign-in-button'
 import { signOut, useSession } from 'next-auth/client'
 import Role from '../core/common/role'
 import styles from './index.module.css'
-import { useVoteStatus, useParticipated } from '../features/voting/client/api'
+import { useVotingState } from '../features/voting/client/api'
 import VoteStatus from '../features/voting/common/vote-status'
 import { useMyTeam } from '../features/team/client/api'
 import { Loader } from '../core/client/components/icons'
+import VotingResults from '../features/voting/client/components/voting-results'
 
-const GuestContent = () => {
-  return (
-    <p>
-      Мы не нашли тебя среди участников хакатона.<br />
-      Если здесь что-то не так, обратись к организаторам.
-    </p>
-  )
-}
+const GuestContent = () => (
+  <p>
+    Мы не нашли тебя среди участников хакатона.<br />
+    Если здесь что-то не так, обратись к организаторам.
+  </p>
+)
 
 const MemberContent = () => {
   const { team } = useMyTeam()
-  
+
   return (
     <>
       {team && <p>
         Ты в командe <strong>{team.name}</strong>.
       </p>}
       <p>
-        Узнай больше о&nbsp;<Link href="/teams"><a>командах</a></Link> и&nbsp;<Link href="/rules"><a>правилах&nbsp;голосования</a></Link>.
+        Изучи <Link href="/teams"><a>все проекты</a></Link> и&nbsp;<Link href="/rules"><a>правила&nbsp;голосования</a></Link>.
       </p>
     </>
   )
 }
 
-const AdminContent = () => {
-  return (
+const NotOpenedText = () => (
+  <p>
+    Приходи сюда голосовать после презентации проектов.
+  </p>
+)
+
+const VoteLink = () => (
+  <>
     <p>
-      А ещё у тебя есть доступ в&nbsp;<Link href="/admin"><a>админку</a></Link>.
+      Настало время выбрать победителя.
     </p>
-  )
-}
+    <div className={`button-container`}>
+      <Link href="/vote"><a className={`button`}>Голосовать!</a></Link>
+    </div>
+  </>
+)
+
+const ParticipatedText = () => (
+  <p>
+    Спасибо за голосование! Результаты будут здесь позже.
+  </p>
+)
+
+const ClosedText = () => (
+  <p>
+    Голосование завершено. Скоро здесь будут результаты.
+  </p>
+)
 
 const VotingContent = () => {
-  const { status } = useVoteStatus()
-  const { participated } = useParticipated()
+  const { state } = useVotingState()
 
-  if (!status || !participated) {
+  if (!state) {
     return <Loader />
   }
 
-  if (status !== VoteStatus.OPEN) {
-    return null
-  }
+  const { status, participated, results } = state
 
-  if (participated.value) {
-    return (
-      <p>
-        Спасибо за голосование! Результаты будут здесь позже.
-      </p>
-    )
+  switch (status) {
+    case VoteStatus.NONE:
+      return <NotOpenedText />
+    case VoteStatus.OPEN:
+      return participated ? <ParticipatedText /> : <VoteLink />
+    case VoteStatus.CLOSED:
+      return <ClosedText />
+    case VoteStatus.PUBLISHED:
+      return <VotingResults results={results} />
+    default:
+      throw new Error('Invalid status')
   }
-
-  return (
-    <div className={`top-padding`}>
-      <Link href="/vote"><a className={`button`}>Голосовать!</a></Link>
-    </div>
-  )
 }
 
-const Greeting = ({ user }) => {
-  return (
-    <p>
-      Привет, <img src={user.image} className={styles.avatar} title={user.email}/> <strong>{user.name}</strong>!
-    </p>
-  )
-}
+const Greeting = ({ user }) => (
+  <p>
+    Привет, <img src={user.image} className={styles.avatar} title={user.email}/> <strong>{user.name}</strong>!
+  </p>
+)
 
-const Footer = () => {
-  return (
-    <footer>
+const Footer = ({ isAdmin }) => (
+  <footer>
+    <small>
       <a
         href={`/api/auth/signout`}
         className={`light destructive`}
@@ -87,11 +101,15 @@ const Footer = () => {
           signOut()
         }}
       >
-        <small>Выйти</small>
+        Выйти
       </a>
-    </footer>
-  )
-}
+      {isAdmin && <>
+        <span className={`light`}>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+        <Link href="/admin"><a className={`light`}>Админка</a></Link>
+      </>}
+    </small>
+  </footer>
+)
 
 const AuthorizedContent = ({ session }) => {
   const { user, role } = session
@@ -104,30 +122,25 @@ const AuthorizedContent = ({ session }) => {
 
       {role >= Role.MEMBER &&
         <MemberContent />}
-      
-      {role >= Role.ADMIN &&
-        <AdminContent />}
 
       {role >= Role.MEMBER &&
         <VotingContent />}
 
-      <Footer />
+      <Footer isAdmin={role >= Role.ADMIN} />
     </>
   )
 }
 
-const UnauthorizedContent = () => {
-  return (
-    <>
-      <p>
-        29–30 августа. Онлайн или в&nbsp;офисе.
-      </p>
-      <div className={`top-padding`}>
-        <SignInButton />
-      </div>
-    </>
-  )
-}
+const UnauthorizedContent = () => (
+  <>
+    <p>
+      29–30 августа. Онлайн или в&nbsp;офисе.
+    </p>
+    <div className={`button-container`}>
+      <SignInButton />
+    </div>
+  </>
+)
 
 export default function Page() {
   const [session, loading] = useSession()

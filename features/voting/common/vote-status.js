@@ -1,14 +1,14 @@
 const NONE = 'none'
 const OPEN = 'open'
 const CLOSED = 'closed'
-const RESULT = 'result'
+const PUBLISHED = 'published'
 
 const isValid = (status) => {
   switch (status) {
     case NONE:
     case OPEN:
     case CLOSED:
-    case RESULT:
+    case PUBLISHED:
       return true
     default:
       return false
@@ -19,6 +19,6 @@ export default {
   NONE,
   OPEN,
   CLOSED,
-  RESULT,
+  PUBLISHED,
   isValid
 }

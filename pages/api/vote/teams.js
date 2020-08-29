@@ -7,7 +7,7 @@ export default methods({
   GET: authorize(Role.MEMBER, async (req, res) => {
     const { id: userId } = await getSession({ req })
     const data = await getAnotherTeams(userId)
-    const body = JSON.stringify(data)
-    res.status(200).end(body)
+    
+    res.status(200).json(data)
   })
 })

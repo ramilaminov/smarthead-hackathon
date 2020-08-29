@@ -1,6 +1,7 @@
 import { useSession } from 'next-auth/client'
 import Role from '../common/role'
 import SignInButton from './components/sign-in-button'
+import { Loader } from './components/icons'
 
 const textForRole = (roleRequired) => {
   switch (roleRequired) {
@@ -20,7 +21,9 @@ const textForRole = (roleRequired) => {
 export default (roleRequired, WrappedComponent) => (props) => {
   const [session, loading] = useSession()
 
-  if (loading) return null
+  if (loading) {
+    return <Loader />
+  }
   
   if (session && session.role >= roleRequired) {
     return <WrappedComponent {...props} />
@@ -33,7 +36,7 @@ export default (roleRequired, WrappedComponent) => (props) => {
       </p>
 
       {!session &&
-        <div className={`top-padding`}>
+        <div className={`button-container`}>
           <SignInButton />
         </div>
       }

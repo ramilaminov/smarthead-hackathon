@@ -1,10 +1,12 @@
 import Layout from '../../core/client/components/layout'
 import HomeLink from '../../core/client/components/home-link'
 import Role from '../../core/common/role'
-import { useVoteStatus, changeVoteStatus } from '../../features/voting/client/api'
+import { openVoting, closeVoting, publishResults, resetVoting, useVotingState } from '../../features/voting/client/api'
 import VoteStatus from '../../features/voting/common/vote-status'
 import authorized from '../../core/client/authorized'
 import { Loader } from '../../core/client/components/icons'
+import formatScore from '../../features/voting/common/format-score'
+import styles from './index.module.css'
 
 const withConfirm = (action, text) => () => {
   if (confirm(text || 'Вы уверены?')) {
@@ -12,33 +14,44 @@ const withConfirm = (action, text) => () => {
   }
 }
 
+const Results = ({ results }) => (
+  <>
+    <ul className={styles.list}>
+      {results.map(row => (
+        <li key={row.team.id}>
+          {row.team.name}: <strong>{formatScore(row.score)}</strong>
+        </li>
+      ))}
+    </ul>
+  </>
+)
+
 const Content = authorized(Role.ADMIN, () => {
-  const { status } = useVoteStatus()
+  const { state } = useVotingState()
 
   const onOpenClick = withConfirm(
-    () => changeVoteStatus(VoteStatus.OPEN),
+    () => openVoting(),
     'Начинаем голосование?'
   )
   const onCloseClick = withConfirm(
-    () => changeVoteStatus(VoteStatus.CLOSED),
+    () => closeVoting(),
     'Завершаем голосование?'
   )
-  const onResultClick = withConfirm(
-    () => changeVoteStatus(VoteStatus.RESULT),
+  const onPublishClick = withConfirm(
+    () => publishResults(),
     'Публикуем результаты голосования для всех?'
   )
 
-  // TODO очищать данные голосования
-  // (отдельный метод, который будет
-  // и статус менять, и очищать?)
   const onResetClick = withConfirm(
-    () => changeVoteStatus(VoteStatus.NONE),
+    () => resetVoting(),
     'Сбрасываем все результаты голосования?'
   )
 
-  if (!status) {
+  if (!state) {
     return <Loader />
   }
+
+  const { status, results } = state
 
   return (
     <>
@@ -68,20 +81,22 @@ const Content = authorized(Role.ADMIN, () => {
 
       {status === VoteStatus.CLOSED && <>
         <p>
-          Голосование завершено.
+          Голосование завершено. Вот что получилось:
         </p>
+        <Results results={results} />
         <button
           className={`button`}
-          onClick={onResultClick}
+          onClick={onPublishClick}
         >
           Опубликовать результаты
         </button>
       </>}
 
-      {status === VoteStatus.RESULT && <>
+      {status === VoteStatus.PUBLISHED && <>
         <p>
-          Результаты голосования опубликованы.
+          Результаты опубликованы.
         </p>
+        <Results results={results} />
         <button
           className={`button`}
           onClick={onResetClick}
