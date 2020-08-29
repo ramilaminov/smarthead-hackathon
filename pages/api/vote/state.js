@@ -13,7 +13,7 @@ export default methods({
 
     const state = { status, participated }
 
-    if (status === VoteStatus.RESULT ||
+    if (status === VoteStatus.PUBLISHED ||
       (status === VoteStatus.CLOSED && role >= Role.ADMIN)) {
       state.results = await getResults()
     }

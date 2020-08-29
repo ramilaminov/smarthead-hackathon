@@ -5,7 +5,7 @@ import VoteStatus from '../../../features/voting/common/vote-status'
 
 export default methods({
   POST: authorize(Role.ADMIN, async (req, res) => {
-    await setStatus(VoteStatus.RESULT)
+    await setStatus(VoteStatus.PUBLISHED)
     res.status(200).end()
   })
 })

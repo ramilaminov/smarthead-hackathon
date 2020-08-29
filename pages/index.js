@@ -86,7 +86,7 @@ const VotingContent = () => {
       return participated ? <ParticipatedText /> : <VoteLink />
     case VoteStatus.CLOSED:
       return <ClosedText />
-    case VoteStatus.RESULT:
+    case VoteStatus.PUBLISHED:
       return <Results results={results} />
     default:
       return null

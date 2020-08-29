@@ -23,7 +23,7 @@ export const closeVoting = async () => {
 
 export const publishResults = async () => {
   await sendAction('/api/vote/publish')
-  mutate('/api/vote/state', state => ({ status: VoteStatus.RESULT, ...state }))
+  mutate('/api/vote/state', state => ({ status: VoteStatus.PUBLISHED, ...state }))
 }
 
 export const resetVoting = async () => {

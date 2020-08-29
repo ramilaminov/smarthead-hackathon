@@ -37,7 +37,7 @@ const Content = authorized(Role.ADMIN, () => {
     () => closeVoting(),
     'Завершаем голосование?'
   )
-  const onResultClick = withConfirm(
+  const onPublishClick = withConfirm(
     () => publishResults(),
     'Публикуем результаты голосования для всех?'
   )
@@ -86,13 +86,13 @@ const Content = authorized(Role.ADMIN, () => {
         <Results results={results} />
         <button
           className={`button`}
-          onClick={onResultClick}
+          onClick={onPublishClick}
         >
           Опубликовать результаты
         </button>
       </>}
 
-      {status === VoteStatus.RESULT && <>
+      {status === VoteStatus.PUBLISHED && <>
         <p>
           Результаты опубликованы.
         </p>
