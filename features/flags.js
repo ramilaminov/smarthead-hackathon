@@ -1,1 +1,1 @@
-export const VOTING_FEATURE = false
+export const VOTING_FEATURE = true
