@@ -6,9 +6,15 @@ import VoteStatus from '../../../features/voting/common/vote-status'
 import { validateResults } from '../../../features/voting/common/validation'
 import { getUser } from '../../../features/auth/server/db'
 import { getTeams } from '../../../features/team/server/db'
+import { VOTING_FEATURE } from '../../../features/flags'
 
 export default methods({
   POST: authorize(Role.MEMBER, async (req, res) => {
+    if (!VOTING_FEATURE) {
+      res.status(400).end()
+      return
+    }
+    
     const results = JSON.parse(req.body)
     
     const { userId } = await getSession({ req })

@@ -7,12 +7,21 @@ import VoteStatus from '../../features/voting/common/vote-status'
 import authorized from '../../core/client/authorized'
 import Link from 'next/link'
 import { Loader } from '../../core/client/components/icons'
+import { VOTING_FEATURE } from '../../features/flags'
 
 const Content = authorized(Role.MEMBER, () => {
   const { state } = useVotingState()
   
   if (!state) {
     return <Loader />
+  }
+
+  if (!VOTING_FEATURE) {
+    return (
+      <p>
+        Голосование сейчас закрыто.
+      </p>
+    )
   }
 
   const { status, participated } = state

@@ -9,6 +9,7 @@ import VoteStatus from '../features/voting/common/vote-status'
 import { useMyTeam } from '../features/team/client/api'
 import { Loader } from '../core/client/components/icons'
 import VotingResults from '../features/voting/client/components/voting-results'
+import { VOTING_FEATURE } from '../features/flags'
 
 const GuestContent = () => (
   <p>
@@ -66,6 +67,10 @@ const VotingContent = () => {
 
   if (!state) {
     return <Loader />
+  }
+
+  if (!VOTING_FEATURE) {
+    return <NotOpenedText />
   }
 
   const { status, participated, results } = state
