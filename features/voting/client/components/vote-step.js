@@ -45,11 +45,11 @@ export default function VoteStep({
         {criterion.description}
       </p>
       
-      {/* TODO склонять "голосов" и "осталось" */}
+      // TODO склонять votesTotal
       <p>
         У тебя всего <strong>{votesTotal}</strong>&nbsp;голосов за&nbsp;критерий. Распредели их все между&nbsp;командами. <strong>
           {votesRemaining > 0
-            ? <>Осталось&nbsp;{votesRemaining}.</>
+            ? <>Осталось:&nbsp;{votesRemaining}.</>
             : <>Готово!</>}
         </strong>
       </p>

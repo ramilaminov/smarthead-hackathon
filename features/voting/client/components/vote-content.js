@@ -5,6 +5,7 @@ import VoteNavigation from './vote-navigation'
 import { sendVote, useVotingTeams } from '../api'
 import useInProgress from '../../../../core/client/use-in-progress'
 import { Loader } from '../../../../core/client/components/icons'
+import { numVotesForTeams } from '../../common/validation'
 
 // TODO refactor, move logic from here
 
@@ -33,7 +34,7 @@ export default function VoteContent() {
   }
 
   const stepResults = results[step]
-  const votesTotal = teams.length * 2
+  const votesTotal = numVotesForTeams(teams.length)
 
   const {
     isValid,
